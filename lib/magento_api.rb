@@ -66,7 +66,7 @@ module MagentoApi
 		client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
 		@session_id = get_session
 
-		product = client.call(:catalog_product_create, message: { sessionId: @session_id, product_attributes})
+		product = client.call(:catalog_product_create, message: { sessionId: @session_id })
 
 		if product.success? == false
 		  puts "Cannot Create Product"
@@ -86,10 +86,10 @@ module MagentoApi
 		if product.success? == false
 		  puts "Cannot Select Product"
 		else
-			data = product.to_array
+			data = product.to_array(:catalog_product_info_response).first
 		end
 
-		@product = data
+		@product = data[:info]
 	end
 
 end

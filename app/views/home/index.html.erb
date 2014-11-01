@@ -1,12 +1,10 @@
-<h1>Mangeto Response</h1>
-<%#= @products.inspect %>
-<%#= @customers.inspect %>
-<%#= @orders.inspect %>
-	<style>
-		td, th{ border: 1px solid #999; }
-	</style>
-	<a href="#">Add New Product</a>
-	<table>
+<div class="container">
+	<h1>Mangeto Response</h1>
+	<div class="row">
+	<a href="customers" class="btn btn-default">View Customers</a>
+	<a href="orders" class="btn btn-default">List Orders</a>
+	<a href="#" class="btn btn-default">Add New Product</a>
+	<table class="table-bordered">
 		<thead>
 			<tr>
 				<th>Product ID</th>
@@ -24,11 +22,13 @@
 				<td><%= product[:type] %></td>
 				<td><%= product[:category_ids][:item] %></td>
 				<td>
-					<a href="view/<%= product[:product_id] %>">View</a>
-					<a href="update/<%= product[:product_id] %>">Update</a>
-					<a href="delete/<%= product[:product_id] %>">Delete</a>
+					<a href="view/<%= product[:product_id] %>" class="label label-info">View</a>
+					<a href="update/<%= product[:product_id] %>" class="label label-primary">Update</a>
+					<a href="delete/<%= product[:product_id] %>" class="label label-danger">Delete</a>
 				</td>
 			</tr>
 			<% end %>
 		</tbody>
 	</table>
+	</div>
+</div>

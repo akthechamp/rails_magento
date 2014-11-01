@@ -1,1 +1,58 @@
-<%= @product.inspect %>
+<div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+
+
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= @product[:name] %></h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> </div>
+
+                <div class=" col-md-9 col-lg-9 ">
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Product ID:</td>
+                        <td><%= @product[:product_id] %></td>
+                      </tr>
+                      <tr>
+                        <td>SKU:</td>
+                        <td><%= @product[:sku] %></td>
+                      </tr>
+                      <tr>
+                        <td>Description:</td>
+                        <td><%= @product[:description] %></td>
+                      </tr>
+
+                         <tr>
+                             <tr>
+                        <td>Price:</td>
+                        <td><%= @product[:price] %></td>
+                      </tr>
+                        <tr>
+                        <td>Product Type:</td>
+                        <td><%= @product[:type_id] %></td>
+                      </tr>
+                      </tr>
+						            <a href="#" class="btn btn-primary">View Stock Info</a>
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+            </div>
+           <div class="panel-footer">
+                  <a data-original-title="Go Back" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">Back</a>
+                  <span class="pull-right">
+                      <a href="edit.html" data-original-title="Edit this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">Edit Product</a>
+                      <a data-original-title="Remove this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger">Delete Product</a>
+                  </span>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>

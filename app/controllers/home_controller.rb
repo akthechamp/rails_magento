@@ -12,4 +12,12 @@ class HomeController < ApplicationController
 	def view
 		@product = MagentoApi.getproduct(params[:id])
 	end
+
+	def customers
+		@customers = MagentoApi.getcustomers
+	end
+
+	def orders
+		@orders = MagentoApi.getorders
+	end
 end
