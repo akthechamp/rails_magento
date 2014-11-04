@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'home#index'
-  get 'view/:id' => 'home#view'
+  get 'view/:id' => 'home#view', as: 'product_view'
   get 'customers' => 'home#customers'
   get 'orders' => 'home#orders'
   # The priority is based upon order of creation: first created -> highest priority.

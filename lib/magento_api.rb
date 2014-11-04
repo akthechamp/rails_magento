@@ -1,9 +1,9 @@
 module MagentoApi
 
-	def self.get_session
-		client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
+	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'])
 
-	  	response = client.call :login, message: { :username => 'ironman', :apiKey => 'admin@123' }
+	def self.get_session
+		response = @client.call :login, message: { :username => MAGE_CONFIG['user'], :apiKey => MAGE_CONFIG['pass'] }
 
         if response.success? == false
         	puts "login failed"
@@ -15,11 +15,9 @@ module MagentoApi
 	end
 
 	def self.allproducts
-	  client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
-
 	  @session_id = get_session
 
-	  products = client.call(:catalog_product_list, message: { sessionId: @session_id, storeView: '1' })
+	  products = @client.call(:catalog_product_list, message: { sessionId: @session_id, storeView: '1' })
 
 	  if products.success? == false
 	    puts "login failed"
@@ -31,11 +29,9 @@ module MagentoApi
 	end
 
 	def self.getcustomers
-	  client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
-
 	  @session_id = get_session
 
-	  customers = client.call(:customer_customer_list, message: { sessionId: @session_id })
+	  customers = @client.call(:customer_customer_list, message: { sessionId: @session_id })
 
 	  if customers.success? == false
 	    puts "login failed"
@@ -47,11 +43,9 @@ module MagentoApi
 	end
 
 	def self.getorders
-	  client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
-
 	  @session_id = get_session
 
-	  orders = client.call(:sales_order_list, message: { sessionId: @session_id })
+	  orders = @client.call(:sales_order_list, message: { sessionId: @session_id })
 
 	  if orders.success? == false
 	    puts "Cannot Get Orders"
@@ -63,10 +57,9 @@ module MagentoApi
 	end
 
 	def self.createproduct(product_attributes)
-		client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
 		@session_id = get_session
 
-		product = client.call(:catalog_product_create, message: { sessionId: @session_id })
+		product = @client.call(:catalog_product_create, message: { sessionId: @session_id })
 
 		if product.success? == false
 		  puts "Cannot Create Product"
@@ -78,10 +71,9 @@ module MagentoApi
 	end
 
 	def self.getproduct(product_id)
-		client = Savon.client(wsdl: 'http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1')
 		@session_id = get_session
 
-		product = client.call(:catalog_product_info, message: { sessionId: @session_id, productId: product_id, storeView: '1', identifierType: 'id'})
+		product = @client.call(:catalog_product_info, message: { sessionId: @session_id, productId: product_id, storeView: '1', identifierType: 'id'})
 
 		if product.success? == false
 		  puts "Cannot Select Product"

@@ -1,31 +1,33 @@
 <div class="container">
     <div class="row">
-    	<h1>Customers</h1>
+    	<h1>Orders</h1>
         <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
         		<thead class="cf">
         			<tr>
+        				<th>Created at</th>
         				<th>Customer ID</th>
-        				<th>Created</th>
-        				<th>Created In</th>
-        				<th>Email</th>
-        				<th>Name</th>
-        				<th>Manage</th>
+        				<th>Tax Amount</th>
+        				<th>Shipping Amount</th>
+        				<th>Subtotal</th>
+                        <th>Grand Total</th>
+                        <th>Weight</th>
+                        <th>Status</th>
+        				<th>Shipping Method</th>
         			</tr>
         		</thead>
         		<tbody>
         			<% @orders[:item].each do |order| %>
-        			<tr>
-        				<td><%= customer[:customer_id] %></td>
-        				<td><%= customer[:created_at] %></td>
-        				<td><%= customer[:created_in] %></td>
-        				<td><%= customer[:email] %></td>
-        				<td><%= customer[:firstname]+ ' ' +customer[:lastname] %></td>
-        				<td>
-    						<a href="view/<%= customer[:customer_id] %>" class="label label-info">View</a>
-    						<a href="update/<%= customer[:customer_id] %>" class="label label-primary">Update</a>
-    						<a href="delete/<%= customer[:customer_id] %>" class="label label-danger">Delete</a>
-						</td>
+                    <tr>
+                        <td><%= order[:created_at] %></td>
+                        <td><a href="#"><%= order[:customer_id] %></a></td>
+                        <td><%= order[:tax_amount] %></td>
+                        <td><%= order[:shipping_amount] %></td>
+                        <td><%= order[:subtotal] %></td>
+                        <td><%= order[:grand_total] %></td>
+                        <td><%= order[:weight] %></td>
+                        <td><%= order[:status] %></td>
+                        <td><%= order[:shipping_method] %></td>
         			</tr>
         			<% end %>
         		</tbody>
@@ -33,6 +35,6 @@
         </div>
     </div>
     <div class="row">
-        <p class="bg-success" style="padding:10px;margin-top:20px"><small><a href="#" class="btn btn-default">Back</a></small></p>
+        <p class="bg-success" style="padding:10px;margin-top:20px"><small><a href="<%= root_url %>" class="btn btn-default">Back</a></small></p>
     </div>
 </div>

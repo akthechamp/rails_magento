@@ -1,0 +1,1 @@
+MAGE_CONFIG = YAML.load_file("#{Rails.root.to_s}/config/magento.yml")[Rails.env]
