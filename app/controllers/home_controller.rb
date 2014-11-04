@@ -21,4 +21,5 @@ class HomeController < ApplicationController
 	def orders
 		@orders = MagentoApi.getorders
 	end
+
 end

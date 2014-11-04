@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'view/:id' => 'home#view', as: 'product_view'
   get 'customers' => 'home#customers'
   get 'orders' => 'home#orders'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
