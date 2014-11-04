@@ -84,4 +84,18 @@ module MagentoApi
 		@product = data[:info]
 	end
 
+	def self.image_url(product_id)
+		@session_id = get_session
+
+		image = @client.call(:catalog_product_attribute_media_list, message: { sessionId: @session_id, product: product_id, storeView: '1', identifierType: 'id' })
+
+		if image.success? == false
+		  puts "Cannot Select Product"
+		else
+			data = image.to_array(:catalog_product_attribute_media_list_response).first
+		end
+
+		@image = data[:result][:item][:url]
+	end
+
 end

@@ -11,6 +11,7 @@ class HomeController < ApplicationController
 
 	def view
 		@product = MagentoApi.getproduct(params[:id])
+		@image_url = MagentoApi.image_url(params[:id])
 	end
 
 	def customers

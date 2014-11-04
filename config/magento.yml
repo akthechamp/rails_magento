@@ -8,3 +8,8 @@ development:
 
 test:
   <<: *defaults
+
+production:
+  user: ironman
+  pass: admin@123
+  wsdlurl: http://mywebdesignz.com/magento_store/index.php/api/v2_soap?wsdl=1
