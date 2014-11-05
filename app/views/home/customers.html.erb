@@ -5,6 +5,7 @@
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
         		<thead class="cf">
         			<tr>
+                        <th>Serial Number</th>
         				<th>Customer ID</th>
         				<th>Created</th>
         				<th>Created In</th>
@@ -14,8 +15,9 @@
         			</tr>
         		</thead>
         		<tbody>
-        			<% @customers[:item].each do |customer| %>
+        			<% @customers[:item].each_with_index do |customer, index| %>
         			<tr>
+                        <td><%= index %></td>
         				<td><%= customer[:customer_id] %></td>
         				<td><%= customer[:created_at] %></td>
         				<td><%= customer[:created_in] %></td>

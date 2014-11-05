@@ -5,6 +5,7 @@
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
         		<thead class="cf">
         			<tr>
+                        <th>Serial Number</th>
         				<th>Created at</th>
         				<th>Customer ID</th>
         				<th>Tax Amount</th>
@@ -17,8 +18,9 @@
         			</tr>
         		</thead>
         		<tbody>
-        			<% @orders[:item].each do |order| %>
+        			<% @orders[:item].each_with_index do |order, index| %>
                     <tr>
+                        <td><%= index %></td>
                         <td><%= order[:created_at] %></td>
                         <td><a href="#"><%= order[:customer_id] %></a></td>
                         <td><%= order[:tax_amount] %></td>

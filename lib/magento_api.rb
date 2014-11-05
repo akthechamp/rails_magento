@@ -95,7 +95,49 @@ module MagentoApi
 			data = image.to_array(:catalog_product_attribute_media_list_response).first
 		end
 
-		@image = data[:result][:item][:url]
+		@image = data[:result][:item]
+	end
+
+	def self.getcategories(parent_id)
+		@session_id = get_session
+
+		category = @client.call(:catalog_category_tree, message: { sessionId: @session_id, parentId: parent_id, storeView: '1' })
+
+		if category.success? == false
+		  puts "Cannot Select Category"
+		else
+			data = category.to_array(:catalog_category_tree_response).first
+		end
+
+		@categories = data[:tree]
+	end
+
+	def self.stock_list(products)
+		@session_id = get_session
+
+		stock = @client.call(:catalog_inventory_stock_item_list, message: { sessionId: @session_id, products: products })
+
+		if stock.success? == false
+		  puts "Cannot Select Stock Info"
+		else
+			data = stock.to_array(:catalog_inventory_stock_item_list_response).first
+		end
+
+		@stock = data[:result]
+	end
+
+	def self.store
+		@session_id = get_session
+
+		store = @client.call(:store_list, message: { sessionId: @session_id })
+
+		if store.success? == false
+		  puts "Cannot Select Store Info"
+		else
+			data = store.to_array(:store_list_response).first
+		end
+
+		@store = data[:stores]
 	end
 
 end
