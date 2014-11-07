@@ -28,4 +28,8 @@ class HomeController < ApplicationController
 		@store = MagentoApi.store
 	end
 
+	def save
+		@product_data = [{:name => params[:product_name], :sku => params[:product_sku], :price => params[:product_price], :special_price => [:product_special_price], :status => params[:product_status], :short_description => params[:product_short_description], :description => params[:product_description], :url_key => params[:product_url_key], :weight => [:product_weight], :tax_class_id => params[:product_tax_class], :meta_title => params[:product_meta_title], :meta_description => params[:product_meta_description], :stock_data => [] }]
+	end
+
 end
