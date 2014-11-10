@@ -56,18 +56,16 @@ module MagentoApi
 	  @orders = data[:result]
 	end
 
-	def self.createproduct(product_attributes)
+	def self.createproduct(product_attributes, sku)
 		@session_id = get_session
 
-		product = @client.call(:catalog_product_create, message: { sessionId: @session_id })
+		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '10', :sku => sku, :productData => product_attributes })
 
 		if product.success? == false
 		  puts "Cannot Create Product"
 		else
 			data = product.to_array
 		end
-
-		@product = data[:result]
 	end
 
 	def self.getproduct(product_id)

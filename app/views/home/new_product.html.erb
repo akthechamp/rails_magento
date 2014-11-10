@@ -11,7 +11,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Name</label>
             <div class="col-sm-9">
-              <input type="text" placeholder="Product Name" name="product_name" class="form-control">
+              <input type="text" placeholder="Product Name" name="product_name" class="form-control" required>
             </div>
           </div>
 
@@ -19,7 +19,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">SKU</label>
             <div class="col-sm-9">
-              <input type="text" placeholder="Product SKU" name="product_sku" class="form-control">
+              <input type="text" placeholder="Product SKU" name="product_sku" class="form-control" required>
             </div>
           </div>
 
@@ -41,8 +41,8 @@
             <label class="col-sm-2 control-label" for="textinput">Status</label>
             <div class="col-sm-3">
               <select name="product_status" class="form-control">
-                <option value="enable">Enabled</option>
-                <option value="disable">Disabled</option>
+                <option value="1">Enabled</option>
+                <option value="2">Disabled</option>
               </select>
             </div>
           </div>
@@ -87,7 +87,11 @@
             <label class="col-sm-3 control-label" for="textinput">Tax Class</label>
             <div class="col-sm-9">
               <select class="form-control" name="product_tax_class" id="">
-                <option value="">Select</option>
+                <option value="">-- Please Select --</option>
+                <option value="0">None</option>
+                <option value="2">Taxable Goods</option>
+                <option value="4">Shipping</option>
+                <option value="6">Tax Exempt</option>
               </select>
             </div>
           </div>
@@ -126,14 +130,14 @@
 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Websites</label>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
               <% @store[:item].each do |st| %>
                 <%= check_box_tag "product_websites[]", st[:store_id] %> <%= st[:name] %> <br/>
               <% end %>
             </div>
 
             <label class="col-sm-3 control-label" for="textinput">Categories</label>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
               <% @categories[:children][:item].each do |category| %>
                 <%#= category.inspect %>
                 <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
