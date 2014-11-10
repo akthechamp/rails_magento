@@ -56,16 +56,24 @@ module MagentoApi
 	  @orders = data[:result]
 	end
 
-	def self.createproduct(product_attributes, sku)
+	def self.createproduct(product_attributes, sku, file_data)
 		@session_id = get_session
 
-		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '10', :sku => sku, :productData => product_attributes })
+		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '4', :sku => sku, :productData => product_attributes, storeView: '1' })
 
 		if product.success? == false
 		  puts "Cannot Create Product"
 		else
 			data = product.to_array
 		end
+
+		product_image(file_data, data)
+	end
+
+	def self.product_image(file_data, data)
+		@session_id = get_session
+		raise data[:catalog_product_create_response][:result].inspect
+		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data.result, :data => file_data, storeView: '1', identifierType: 'id'})
 	end
 
 	def self.getproduct(product_id)

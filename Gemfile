@@ -33,6 +33,8 @@ gem 'twitter-bootstrap-rails', :github => 'seyhunak/twitter-bootstrap-rails', :b
 # SOAP API
 gem 'savon', '~> 2.2.0'
 
+gem 'carrierwave'
+
 group :development, :test do
   gem 'sqlite3'
 
