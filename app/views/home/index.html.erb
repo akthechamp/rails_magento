@@ -28,7 +28,7 @@
 				<td>
 					<a href="<%= product_view_path(product[:product_id]) %>" class="label label-info">View</a>
 					<a href="update/<%= product[:product_id] %>" class="label label-primary">Edit</a>
-					<a href="delete/<%= product[:product_id] %>" class="label label-danger">Delete</a>
+					<%= link_to 'Delete', url_for(action: :delete, id: product[:product_id]), :method => :delete, class: "label label-danger", :data => { confirm: "Are you sure?"} %>
 				</td>
 			</tr>
 			<% end %>

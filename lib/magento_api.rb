@@ -58,7 +58,6 @@ module MagentoApi
 
 	def self.createproduct(product_attributes, sku, file_data)
 		@session_id = get_session
-
 		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '4', :sku => sku, :productData => product_attributes, storeView: '1' })
 
 		if product.success? == false
@@ -67,13 +66,13 @@ module MagentoApi
 			data = product.to_array
 		end
 
-		product_image(file_data, data)
+		# product_image(file_data, data)
 	end
 
 	def self.product_image(file_data, data)
 		@session_id = get_session
-		raise data[:catalog_product_create_response][:result].inspect
-		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data.result, :data => file_data, storeView: '1', identifierType: 'id'})
+		# raise data.inspect
+		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data[0][:catalog_product_create_response][:result], :data => file_data, storeView: '1', identifierType: 'id'})
 	end
 
 	def self.getproduct(product_id)
@@ -144,6 +143,11 @@ module MagentoApi
 		end
 
 		@store = data[:stores]
+	end
+
+	def self.delete_product(product_id)
+		@session_id = get_session
+		product = @client.call(:catalog_product_delete, message: { sessionId: @session_id, :product => product_id, identifierType: 'id' })
 	end
 
 end

@@ -60,7 +60,7 @@
                   <a data-original-title="Go Back" href='<%= root_url %>' data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">Back</a>
                   <span class="pull-right">
                       <a href="edit.html" data-original-title="Edit this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">Edit Product</a>
-                      <a data-original-title="Remove this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger">Delete Product</a>
+                      <%= link_to 'Delete Product', url_for(action: :delete, id: @product[:product_id]), :method => :delete, class: "btn btn-sm btn-danger", :data => { confirm: "Are you sure?", "original-title" => 'Remove this product', :toggle => "tooltip"} %>
                   </span>
               </div>
 

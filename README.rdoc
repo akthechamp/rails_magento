@@ -1,28 +1,21 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This README for a Magento API wrapper built on Ruby on Rails for connecting Rails App to Magento API
 
-Things you may want to cover:
+Things covered are:
 
-* Ruby version
+* Listing Products
 
-* System dependencies
+* Listing Individual Product Information
 
-* Configuration
+* Listing Stock Data
 
-* Database creation
+* Listing Customers
 
-* Database initialization
+* Listing Orders
 
-* How to run the test suite
+* Creating/Updating a Product
 
-* Services (job queues, cache servers, search engines, etc.)
+* Adding Media to Products
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Current the Library is built to use config files and initializers.

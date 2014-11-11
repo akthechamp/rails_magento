@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'home#index'
   get 'view/:id' => 'home#view', as: 'product_view'
+  delete 'delete/:id' => 'home#delete', as: 'delete_product'
   get 'customers' => 'home#customers'
   get 'orders' => 'home#orders'
   get 'new-product' => 'home#new_product', as: 'new_product'
