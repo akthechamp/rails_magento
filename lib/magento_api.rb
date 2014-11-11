@@ -66,7 +66,7 @@ module MagentoApi
 			data = product.to_array
 		end
 
-		# product_image(file_data, data)
+		product_image(file_data, data)
 	end
 
 	def self.product_image(file_data, data)
