@@ -1,0 +1,211 @@
+  <div class="row"><br><br>
+    <div class="col-md-4 col-md-offset-4">
+      <!-- <form class="form-horizontal" role="form"> -->
+      <%= form_tag("/update", method: "post", multipart: true, class: "form-horizontal") do %>
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Edit Product : <%= @product[:name] %></legend>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Name</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Product Name" name="product_name" value="<%= @product[:name] %>" class="form-control" required>
+            </div>
+          </div>
+
+          <input type="hidden" name="product_id" value="<%= @product[:product_id] %>">
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">SKU</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Product SKU" value="<%= @product[:sku] %>" class="form-control" readonly="readonly">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Price</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Product Price" name="product_price" value="<%= @product[:price] %>" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Special Price</label>
+            <div class="col-sm-4">
+              <input type="text" placeholder="Product Special Price" value="<%= @product[:special_price] %>" name="product_special_price" class="form-control">
+            </div>
+
+            <label class="col-sm-2 control-label" for="textinput">Status</label>
+            <div class="col-sm-3">
+              <select name="product_status" class="form-control">
+                <option value="">Select</option>
+                <option value="1">Enabled</option>
+                <option value="2">Disabled</option>
+              </select>
+
+              <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                  $('select[name="product_status"]').val("<%= @product[:status] %>")
+                });
+              </script>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Short Description</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Product Short Description" name="product_short_description" class="form-control"><%= @product[:short_description] %></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Description</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Product Description" name="product_description" class="form-control"><%= @product[:description] %></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">URL Key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="Product URL Key" value="<%= @product[:url_key] %>" name="product_url_key">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Weight</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="Product Weight" value="<%= @product[:weight] %>" name="product_weight">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Tax Class</label>
+            <div class="col-sm-9">
+              <select class="form-control" name="product_tax_class" id="">
+                <option value="">-- Please Select --</option>
+                <option value="0">None</option>
+                <option value="2">Taxable Goods</option>
+                <option value="4">Shipping</option>
+                <option value="6">Tax Exempt</option>
+              </select>
+
+              <script type="text/javascript">
+                jQuery(document).ready(function($) { $("select[name='product_tax_class']").val("<%= @product[:tax_class_id] %>"); });
+              </script>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Meta Title</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="Product Meta Title" value="<%= @product[:meta_title] %>" name="product_meta_title">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Meta Description</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="Product Meta Description" value="<%= @product[:meta_description] %>" name="product_meta_description">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Stock Availability</label>
+            <div class="col-sm-9">
+              <select name="product_stock_availability" class="form-control">
+                <option value="">Select</option>
+                <option value="1">Available</option>
+                <option value="0">Out of Stock</option>
+              </select>
+              <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('select[name="product_stock_availability"]').val("<%= @stock[:item][:is_in_stock] %>");
+                });
+              </script>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Qty</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" value="<%= @stock[:item][:qty] %>" placeholder="Product Quantity" name="product_qty">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Websites</label>
+            <div class="col-sm-2 websites">
+              <% @store[:item].each do |st| %>
+                <%= check_box_tag "product_websites[]", st[:store_id] %> <%= st[:name] %> <br/>
+              <% end %>
+
+              <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    var selected_websites = <%= raw @product[:websites][:item].to_json %>;
+                    // console.log(selected_websites.length);
+                    if(selected_websites.length > 1){
+                      $.each(selected_websites, function(index, val) {
+                          $('.websites').find('input[value="'+val+'"]').attr('checked', 'checked');
+                      });
+                    }else{
+                      $('.websites').find('input[value="'+selected_websites+'"]').attr('checked', 'checked');
+                    }
+                });
+              </script>
+            </div>
+
+            <label class="col-sm-3 control-label" for="textinput">Categories</label>
+            <div class="col-sm-4 categories">
+              <% @categories[:children][:item].each do |category| %>
+                <%#= category.inspect %>
+                <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
+                <% if !category[:children].empty? %>
+                  <% category[:children].each do |k, v| %>
+                      <% if v.kind_of?(Array)  %>
+                        <% v.each do |subs| %>
+                          -- <%= check_box_tag "product_category[]", subs[:category_id] %> <%= subs[:name] %> <br/>
+                        <% end %>
+                      <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+
+              <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    var selected_categories = <%= raw @product[:categories][:item].to_json %>;
+                    $.each(selected_categories, function(index, val) {
+                        $('.categories').find('input[value="'+val+'"]').attr('checked', 'checked');
+                    });
+                });
+              </script>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Product Photos</label>
+            <div class="col-sm-9">
+              <input type="file" name="file">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-9">
+              <div class="pull-left">
+                <a href="<%= root_url %>" class="btn btn-default">Back</a>
+              </div>
+              <div class="pull-right">
+                <button type="cancel" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
+      <% end %>
+    </div><!-- /.col-lg-12 -->
+</div><!-- /.row -->

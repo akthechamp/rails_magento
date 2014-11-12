@@ -37,8 +37,8 @@ class HomeController < ApplicationController
 			uploader.store!(params[:file])
 			encoded_file = Base64.encode64(File.open(uploader.current_path).read)
 
-			types_data = ['thumbnail', 'small_image', 'image']
-			file_data = [file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => 0, :types => types_data, :exclude => 0]
+			types_data = { :complexObjectArray => 'thumbnail', :complexObjectArray => 'small_image', :complexObjectArray => 'image' }
+			file_data = [ file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => 0, :types => types_data, :exclude => 0 ]
 		end
 
 		@product_data = {
@@ -96,6 +96,18 @@ class HomeController < ApplicationController
 	def delete
 		@product = MagentoApi.delete_product(params[:id])
 		redirect_to root_url
+	end
+
+	def update
+	end
+
+	def edit
+		@product = MagentoApi.getproduct(params[:id])
+		@image_url = MagentoApi.image_url(params[:id])
+		@stock = MagentoApi.stock_list(Array.wrap([:product_id => params[:id]]))
+
+		@categories = MagentoApi.getcategories('2')
+		@store = MagentoApi.store
 	end
 
 end

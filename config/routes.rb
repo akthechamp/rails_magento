@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   get 'customers' => 'home#customers'
   get 'orders' => 'home#orders'
   get 'new-product' => 'home#new_product', as: 'new_product'
+  get 'edit/:id' => 'home#edit', as: 'edit_product'
   post 'save' => 'home#save', as: 'save'
+  post 'update' => 'home#update', as: 'update'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
