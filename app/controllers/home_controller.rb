@@ -38,10 +38,52 @@ class HomeController < ApplicationController
 			encoded_file = Base64.encode64(File.open(uploader.current_path).read)
 
 			types_data = ['thumbnail', 'small_image', 'image']
-			file_data = [file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :types => types_data, :position => 1, :exclude => 0]
+			file_data = [file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => 0, :types => types_data, :exclude => 0]
 		end
 
-		@product_data = [{:name => params[:product_name], :price => params[:product_price], :special_price => params[:product_special_price], :status => params[:product_status].to_i, :short_description => params[:product_short_description], :description => params[:product_description], :url_key => params[:product_url_key], :weight => params[:product_weight], :tax_class_id => params[:product_tax_class].to_i, :meta_title => params[:product_meta_title], :meta_description => params[:product_meta_description], :stock_data => [{:qty => params[:product_qty], :is_in_stock => params[:product_stock_availability], :manage_stock => 1 }], :websites => websites, :categories => categories, :visibility => 4 }]
+		@product_data = {
+			:name => params[:product_name],
+			:price => params[:product_price],
+			:special_price => params[:product_special_price],
+			:status => params[:product_status].to_i,
+			:short_description => params[:product_short_description],
+			:description => params[:product_description],
+			:url_key => params[:product_url_key],
+			:url_path => '',
+			:has_options => '',
+			:gift_message_available => '',
+			:special_from_date => '',
+			:special_to_date => '',
+			:tier_price => '',
+			:custom_design => '',
+			:custom_layout_update => '',
+			:options_container => '',
+			:additional_attributes => '',
+			:weight => params[:product_weight],
+			:tax_class_id => params[:product_tax_class].to_i,
+			:meta_title => params[:product_meta_title],
+			:meta_keyword => '',
+			:meta_description => params[:product_meta_description],
+			:stock_data => {
+				:qty => params[:product_qty],
+				:is_in_stock => params[:product_stock_availability].to_i,
+				:manage_stock => '', :use_config_manage_stock => '',
+				:min_qty => '',
+				:use_config_min_qty => '',
+				:min_sale_qty => 1,
+				:use_config_min_sale_qty => '',
+				:max_sale_qty => '',
+				:use_config_max_sale_qty => '',
+				:is_qty_decimal => '',
+				:backorders => '',
+				:use_config_backorders => '',
+				:notify_stock_qty => '',
+				:use_config_notify_stock_qty => ''
+				},
+			:websites => websites,
+			:categories => categories,
+			:visibility => 4
+		}
 		# raise @product_data.inspect
 
 		# file_data = [file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => '1', :types => types_data, :exclude => '0']

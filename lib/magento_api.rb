@@ -1,17 +1,27 @@
 module MagentoApi
 
-	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'])
+	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'], logger: Rails.logger, log: true, convert_request_keys_to: :none, :log_level => :debug )
 
-	def self.get_session
-		response = @client.call :login, message: { :username => MAGE_CONFIG['user'], :apiKey => MAGE_CONFIG['pass'] }
+	def self.get_session(refresh = false)
+		@session_id = nil if refresh
 
-        if response.success? == false
-        	puts "login failed"
-      	else
-      		data = response.to_array(:login_response).first
-      	end
+		unless @session_id
+			begin
+				response = @client.call :login, message: { :username => MAGE_CONFIG['user'], :apiKey => MAGE_CONFIG['pass'] }
+			rescue Savon::Error => soap_fault
+  				print "Error: #{soap_fault}\n"
+			end
 
-	  	@session_id = data[:login_return]
+	        if response.nil?
+	        	raise soap_fault
+	      	else
+	      		data = response.to_array(:login_response).first
+	      	end
+
+	      	@session_id = data[:login_return]
+	    end
+
+	  	@session_id
 	end
 
 	def self.allproducts
@@ -56,7 +66,7 @@ module MagentoApi
 	  @orders = data[:result]
 	end
 
-	def self.createproduct(product_attributes, sku, file_data)
+	def self.createproduct(product_attributes, sku, file_data = false)
 		@session_id = get_session
 		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '4', :sku => sku, :productData => product_attributes, storeView: '1' })
 
@@ -66,13 +76,23 @@ module MagentoApi
 			data = product.to_array
 		end
 
-		product_image(file_data, data)
+		if file_data
+			product_image(file_data, data)
+		end
+
+		# update_product(data[0][:catalog_product_create_response][:result], product_attributes[0][:stock_data])
 	end
 
 	def self.product_image(file_data, data)
 		@session_id = get_session
 		# raise data.inspect
 		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data[0][:catalog_product_create_response][:result], :data => file_data, storeView: '1', identifierType: 'id'})
+	end
+
+	def self.update_product(id, stock)
+		@session_id = get_session
+		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => { :short_description => "Something short yaar for sure!", stock_data: {:qty => '10', :is_in_stock => 1, :manage_stock => 1, :use_config_manage_stock => 1 }}, storeView: '1', identifierType: 'id' })
+
 	end
 
 	def self.getproduct(product_id)
