@@ -89,9 +89,10 @@ module MagentoApi
 		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data[0][:catalog_product_create_response][:result], :data => file_data, storeView: '1', identifierType: 'id'})
 	end
 
-	def self.update_product(id, stock)
+	def self.update_product(product_attributes, id, file_data = false)
 		@session_id = get_session
-		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => { :short_description => "Something short yaar for sure!", stock_data: {:qty => '10', :is_in_stock => 1, :manage_stock => 1, :use_config_manage_stock => 1 }}, storeView: '1', identifierType: 'id' })
+
+		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => product_attributes, storeView: '1', identifierType: 'id' })
 
 	end
 

@@ -15,3 +15,5 @@
  */
 
 .row{ margin: 0px; }
+
+.overflowing img{ max-width: 33%; }

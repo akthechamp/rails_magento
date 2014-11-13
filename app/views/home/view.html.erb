@@ -5,15 +5,22 @@
 
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title">Product Info | <%= @product[:name] %></h3>
+              <h3 class="panel-title">Product Info | <%= @product[:name] %> <%= @product[:status] ? "<span class='label label-success pull-right'>Enabled</span>".html_safe : "<span class='label label-danger pull-right'>Disabled</span>".html_safe %></h3>
             </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-12 col-lg-12 " align="center">
+                <div class="col-md-12 col-lg-12 overflowing" align="center">
                   <% if @image_url.present? %>
                         <% @image_url.each do |image| %>
-                              <img alt="User Pic" src="<%= image[:url] %>" style="max-width: 30%;">
+                            <% begin %>
+                              <img src="<%= image[:url] %>" style="max-width: 30%;">
+                            <% rescue Exception => e %>
+                                <%= @image_url[:url] %> ">
+                                <% break %>
+                              <% end %>
                         <% end %>
+                  <% else %>
+                    <h3>No Image Available</h3>
                   <% end %>
                 </div>
                 <div class="col-md-12 col-lg-12" style="margin-top: 20px;">
@@ -32,10 +39,19 @@
                         <td><%= @product[:description] %></td>
                       </tr>
 
+                      <tr>
+                        <td>Short Description:</td>
+                        <td><%= @product[:short_description] %></td>
+                      </tr>
+
                          <tr>
                              <tr>
                         <td>Price:</td>
                         <td><%= @product[:price] %></td>
+                      </tr>
+                       <tr>
+                        <td>Special Price:</td>
+                        <td><%= @product[:special_price] %></td>
                       </tr>
                         <tr>
                         <td>Product Type:</td>
@@ -49,6 +65,18 @@
 						              <td>Stock Info</td>
                           <td><%= @stock[:item][:qty] %></td>
                         </tr>
+
+                        </tr>
+                          <tr>
+                          <td>Meta Title:</td>
+                          <td><%= @product[:meta_title] %></td>
+                        </tr>
+
+                        </tr>
+                          <tr>
+                          <td>Meta Description:</td>
+                          <td><%= @product[:meta_description] %></td>
+                        </tr>
                       </tr>
                     </tbody>
                   </table>
@@ -59,7 +87,7 @@
            <div class="panel-footer">
                   <a data-original-title="Go Back" href='<%= root_url %>' data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">Back</a>
                   <span class="pull-right">
-                      <a href="edit.html" data-original-title="Edit this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">Edit Product</a>
+                      <a href="<%= edit_product_path(@product[:product_id]) %>" data-original-title="Edit this product" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">Edit Product</a>
                       <%= link_to 'Delete Product', url_for(action: :delete, id: @product[:product_id]), :method => :delete, class: "btn btn-sm btn-danger", :data => { confirm: "Are you sure?", "original-title" => 'Remove this product', :toggle => "tooltip"} %>
                   </span>
               </div>
