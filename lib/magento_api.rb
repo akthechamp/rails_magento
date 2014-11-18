@@ -94,6 +94,10 @@ module MagentoApi
 
 		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => product_attributes, storeView: '1', identifierType: 'id' })
 
+		if file_data
+			product_image(file_data, data)
+		end
+
 	end
 
 	def self.getproduct(product_id)

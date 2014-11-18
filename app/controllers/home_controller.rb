@@ -37,7 +37,8 @@ class HomeController < ApplicationController
 			uploader.store!(params[:file])
 			encoded_file = Base64.encode64(File.open(uploader.current_path).read)
 
-			types_data = { :item => 'thumbnail', :item => 'small_image', :item => 'image' }
+			# types_data = { :complexObjectArray => 'thumbnail', :complexObjectArray => 'small_image', :complexObjectArray => 'image' }
+			types_data = 'image'
 			file_data = [ file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => 0, :types => types_data, :exclude => 0 ]
 		end
 

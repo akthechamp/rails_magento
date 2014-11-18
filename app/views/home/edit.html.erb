@@ -141,7 +141,22 @@
             <label class="col-sm-3 control-label" for="textinput">Websites</label>
             <div class="col-sm-2 websites">
               <% @store[:item].each do |st| %>
-                <%= check_box_tag "product_websites[]", st[:store_id] %> <%= st[:name] %> <br/>
+                <% begin %>
+                    <% store_id = st[:store_id] %>
+                <% rescue Exception => e %>
+                    <% @store[:item][:store_id] %>
+                <% end %>
+
+                <%= check_box_tag "product_websites[]", store_id %>
+
+                <% begin %>
+                    <%= st[:name] %>
+                <% rescue Exception => e %>
+                    <%= @store[:item][:name] %>
+                    <% break %>
+                <% end %>
+
+                <br/>
               <% end %>
 
               <script type="text/javascript">
@@ -163,15 +178,20 @@
             <div class="col-sm-4 categories">
               <% @categories[:children][:item].each do |category| %>
                 <%#= category.inspect %>
-                <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
-                <% if !category[:children].empty? %>
-                  <% category[:children].each do |k, v| %>
-                      <% if v.kind_of?(Array)  %>
-                        <% v.each do |subs| %>
-                          -- <%= check_box_tag "product_category[]", subs[:category_id] %> <%= subs[:name] %> <br/>
+                <% if category.size > 2 %>
+                  <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
+                  <% if !category[:children].empty? %>
+                    <% category[:children].each do |k, v| %>
+                        <% if v.kind_of?(Array)  %>
+                          <% v.each do |subs| %>
+                            -- <%= check_box_tag "product_category[]", subs[:category_id] %> <%= subs[:name] %> <br/>
+                          <% end %>
                         <% end %>
-                      <% end %>
+                    <% end %>
                   <% end %>
+                <% else %>
+                  <%= check_box_tag "product_category[]", @categories[:children][:item][:category_id] %> <%= @categories[:children][:item][:name] %> <br/>
+                  <% break %>
                 <% end %>
               <% end %>
 
@@ -187,9 +207,25 @@
           </div>
 
           <div class="form-group">
-            <label class="col-sm-3 control-label" for="textinput">Product Photos</label>
+            <label class="col-sm-3 control-label" for="textinput">Product Images</label>
             <div class="col-sm-9">
               <input type="file" name="file">
+            </div>
+
+            <div class="col-md-12 col-lg-12 overflowing" align="center">
+              <% if @image_url.present? %>
+                    <% @image_url.each do |image| %>
+
+                        <% begin %>
+                          <img src="<%= image[:url] %>" style="max-width: 30%;">
+                        <% rescue Exception => e %>
+                            <%= @image_url[:url] %> ">
+                            <% break %>
+                          <% end %>
+                    <% end %>
+              <% else %>
+                <h3>No Previous Image Available</h3>
+              <% end %>
             </div>
           </div>
 
