@@ -176,22 +176,24 @@
 
             <label class="col-sm-3 control-label" for="textinput">Categories</label>
             <div class="col-sm-4 categories">
-              <% @categories[:children][:item].each do |category| %>
-                <%#= category.inspect %>
-                <% if category.size > 2 %>
-                  <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
-                  <% if !category[:children].empty? %>
-                    <% category[:children].each do |k, v| %>
-                        <% if v.kind_of?(Array)  %>
-                          <% v.each do |subs| %>
-                            -- <%= check_box_tag "product_category[]", subs[:category_id] %> <%= subs[:name] %> <br/>
+              <% if !@categories.nil? %>
+                <% @categories[:children][:item].each do |category| %>
+                  <%#= category.inspect %>
+                  <% if category.size > 2 %>
+                    <%= check_box_tag "product_category[]", category[:category_id] %> <%= category[:name] %> <br/>
+                    <% if !category[:children].empty? %>
+                      <% category[:children].each do |k, v| %>
+                          <% if v.kind_of?(Array)  %>
+                            <% v.each do |subs| %>
+                              -- <%= check_box_tag "product_category[]", subs[:category_id] %> <%= subs[:name] %> <br/>
+                            <% end %>
                           <% end %>
-                        <% end %>
+                      <% end %>
                     <% end %>
+                  <% else %>
+                    <%= check_box_tag "product_category[]", @categories[:children][:item][:category_id] %> <%= @categories[:children][:item][:name] %> <br/>
+                    <% break %>
                   <% end %>
-                <% else %>
-                  <%= check_box_tag "product_category[]", @categories[:children][:item][:category_id] %> <%= @categories[:children][:item][:name] %> <br/>
-                  <% break %>
                 <% end %>
               <% end %>
 
@@ -235,7 +237,7 @@
                 <a href="<%= root_url %>" class="btn btn-default">Back</a>
               </div>
               <div class="pull-right">
-                <button type="cancel" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-default">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
             </div>

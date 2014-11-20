@@ -1,13 +1,48 @@
 module MagentoApi
 
-	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'], logger: Rails.logger, log: true, convert_request_keys_to: :none, :log_level => :debug )
+	# client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'], soap_version: 2, endpoint: "http://localhost/rails_magento/magento/index.php/api/v2_soap/index/", logger: Rails.logger, log: true, convert_request_keys_to: :none, :log_level => :debug, pretty_print_xml: true )
+
+	def self.client
+      Savon::Client.new do |savon|
+        savon.ssl_verify_mode          :none
+        savon.wsdl                     MAGE_CONFIG['wsdlurl']
+        # savon.namespaces               namespaces
+        # savon.soap_version             2
+        savon.logger                   Rails.logger
+        # savon.env_namespace            'SOAP-ENV'
+        # savon.raise_errors             false		#Keep that for Production
+        #savon.namespace_identifier     #none
+        savon.convert_request_keys_to  :none
+        # savon.strip_namespaces         true
+        # savon.pretty_print_xml         true
+        savon.log                      log_env
+        savon.log_level                :debug
+        # savon.open_timeout             10    #seconds
+        # savon.read_timeout             45    #seconds
+      end
+    end
+
+    def self.log_env
+      true
+    end
+
+    def self.namespaces
+      {
+        'xmlns:SOAP-ENV' => 'http://schemas.xmlsoap.org/soap/envelope/',
+        'xmlns:ns1' => 'urn:Magento',
+        'xmlns:xsd' => 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        'xmlns:SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/',
+        'SOAP-ENV:encodingStyle' => 'http://schemas.xmlsoap.org/soap/encoding/'
+      }
+    end
 
 	def self.get_session(refresh = false)
 		@session_id = nil if refresh
 
 		unless @session_id
 			begin
-				response = @client.call :login, message: { :username => MAGE_CONFIG['user'], :apiKey => MAGE_CONFIG['pass'] }
+				response = client.call :login, message: { :username => MAGE_CONFIG['user'], :apiKey => MAGE_CONFIG['pass'] }
 			rescue Savon::Error => soap_fault
   				print "Error: #{soap_fault}\n"
 			end
@@ -18,7 +53,11 @@ module MagentoApi
 	      		data = response.to_array(:login_response).first
 	      	end
 
-	      	@session_id = data[:login_return]
+	      	if !data.nil?
+	      		@session_id = data[:login_return]
+	      	else
+	      		@session_id = get_session(true)
+	      	end
 	    end
 
 	  	@session_id
@@ -27,7 +66,7 @@ module MagentoApi
 	def self.allproducts
 	  @session_id = get_session
 
-	  products = @client.call(:catalog_product_list, message: { sessionId: @session_id, storeView: '1' })
+	  products = client.call(:catalog_product_list, message: { sessionId: @session_id, storeView: '1' })
 
 	  if products.success? == false
 	    puts "login failed"
@@ -41,7 +80,7 @@ module MagentoApi
 	def self.getcustomers
 	  @session_id = get_session
 
-	  customers = @client.call(:customer_customer_list, message: { sessionId: @session_id })
+	  customers = client.call(:customer_customer_list, message: { sessionId: @session_id })
 
 	  if customers.success? == false
 	    puts "login failed"
@@ -55,7 +94,7 @@ module MagentoApi
 	def self.getorders
 	  @session_id = get_session
 
-	  orders = @client.call(:sales_order_list, message: { sessionId: @session_id })
+	  orders = client.call(:sales_order_list, message: { sessionId: @session_id })
 
 	  if orders.success? == false
 	    puts "Cannot Get Orders"
@@ -68,7 +107,7 @@ module MagentoApi
 
 	def self.createproduct(product_attributes, sku, file_data = false)
 		@session_id = get_session
-		product = @client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '4', :sku => sku, :productData => product_attributes, storeView: '1' })
+		product = client.call(:catalog_product_create, message: { :sessionId => @session_id, :type => 'simple', :set => '4', :sku => sku, :productData => product_attributes, storeView: '1' })
 
 		if product.success? == false
 		  puts "Cannot Create Product"
@@ -86,13 +125,21 @@ module MagentoApi
 	def self.product_image(file_data, data_id)
 		@session_id = get_session
 		# raise data.inspect
-		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data_id, :data => file_data, storeView: '1', identifierType: 'id'})
+		image = client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data_id, :data => file_data, storeView: '1', identifierType: 'id'})
+
+		# product_update_image(file_data, data_id)
+	end
+
+	def self.product_update_image(file_data, data_id)
+		@session_id = get_session
+		# raise data.inspect
+		image = client.call(:catalog_product_attribute_media_update, message: { :sessionId => @session_id, :product =>  data_id, :data => { :position => 0, :types => ["image,""small_image","thumbnail"], :exclude => 0 }, storeView: '1', identifierType: 'id'})
 	end
 
 	def self.update_product(product_attributes, id, file_data = false)
 		@session_id = get_session
 
-		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => product_attributes, storeView: '1', identifierType: 'id' })
+		product = client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => product_attributes, storeView: '1', identifierType: 'id' })
 
 		if file_data
 			product_image(file_data, id)
@@ -103,7 +150,7 @@ module MagentoApi
 	def self.getproduct(product_id)
 		@session_id = get_session
 
-		product = @client.call(:catalog_product_info, message: { sessionId: @session_id, productId: product_id, storeView: '1', identifierType: 'id'})
+		product = client.call(:catalog_product_info, message: { sessionId: @session_id, productId: product_id, storeView: '1', identifierType: 'id'})
 
 		if product.success? == false
 		  puts "Cannot Select Product"
@@ -117,7 +164,7 @@ module MagentoApi
 	def self.image_url(product_id)
 		@session_id = get_session
 
-		image = @client.call(:catalog_product_attribute_media_list, message: { sessionId: @session_id, product: product_id, storeView: '1', identifierType: 'id' })
+		image = client.call(:catalog_product_attribute_media_list, message: { sessionId: @session_id, product: product_id, storeView: '1', identifierType: 'id' })
 
 		if image.success? == false
 		  puts "Cannot Select Product"
@@ -125,13 +172,15 @@ module MagentoApi
 			data = image.to_array(:catalog_product_attribute_media_list_response).first
 		end
 
-		@image = data[:result][:item]
+		if !data.nil?
+			@image = data[:result][:item]
+		end
 	end
 
 	def self.getcategories(parent_id)
 		@session_id = get_session
 
-		category = @client.call(:catalog_category_tree, message: { sessionId: @session_id, parentId: parent_id, storeView: '1' })
+		category = client.call(:catalog_category_tree, message: { sessionId: @session_id, parentId: parent_id, storeView: '1' })
 
 		if category.success? == false
 		  puts "Cannot Select Category"
@@ -139,13 +188,15 @@ module MagentoApi
 			data = category.to_array(:catalog_category_tree_response).first
 		end
 
-		@categories = data[:tree]
+		if !data.nil?
+			@categories = data[:tree]
+		end
 	end
 
 	def self.stock_list(products)
 		@session_id = get_session
 
-		stock = @client.call(:catalog_inventory_stock_item_list, message: { sessionId: @session_id, products: products })
+		stock = client.call(:catalog_inventory_stock_item_list, message: { sessionId: @session_id, products: products })
 
 		if stock.success? == false
 		  puts "Cannot Select Stock Info"
@@ -159,7 +210,7 @@ module MagentoApi
 	def self.store
 		@session_id = get_session
 
-		store = @client.call(:store_list, message: { sessionId: @session_id })
+		store = client.call(:store_list, message: { sessionId: @session_id })
 
 		if store.success? == false
 		  puts "Cannot Select Store Info"
@@ -167,12 +218,14 @@ module MagentoApi
 			data = store.to_array(:store_list_response).first
 		end
 
-		@store = data[:stores]
+		if !data.nil?
+			@store = data[:stores]
+		end
 	end
 
 	def self.delete_product(product_id)
 		@session_id = get_session
-		product = @client.call(:catalog_product_delete, message: { sessionId: @session_id, :product => product_id, identifierType: 'id' })
+		product = client.call(:catalog_product_delete, message: { sessionId: @session_id, :product => product_id, identifierType: 'id' })
 	end
 
 end
