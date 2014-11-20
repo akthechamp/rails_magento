@@ -77,16 +77,16 @@ module MagentoApi
 		end
 
 		if file_data
-			product_image(file_data, data)
+			product_image(file_data, data[0][:catalog_product_create_response][:result])
 		end
 
 		# update_product(data[0][:catalog_product_create_response][:result], product_attributes[0][:stock_data])
 	end
 
-	def self.product_image(file_data, data)
+	def self.product_image(file_data, data_id)
 		@session_id = get_session
 		# raise data.inspect
-		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data[0][:catalog_product_create_response][:result], :data => file_data, storeView: '1', identifierType: 'id'})
+		image = @client.call(:catalog_product_attribute_media_create, message: { :sessionId => @session_id, :product =>  data_id, :data => file_data, storeView: '1', identifierType: 'id'})
 	end
 
 	def self.update_product(product_attributes, id, file_data = false)
@@ -95,7 +95,7 @@ module MagentoApi
 		product = @client.call(:catalog_product_update, message: { :sessionId => @session_id, :product => id, :productData => product_attributes, storeView: '1', identifierType: 'id' })
 
 		if file_data
-			product_image(file_data, data)
+			product_image(file_data, id)
 		end
 
 	end

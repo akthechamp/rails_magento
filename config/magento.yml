@@ -1,7 +1,7 @@
 defaults: &defaults
   user: ironman
   pass: admin@123
-  wsdlurl: http://localhost/rails_magento/dummy_magento/index.php/api/v2_soap?wsdl=1
+  wsdlurl: http://localhost/rails_magento/magento/index.php/api/v2_soap?wsdl=1
 
 development:
   <<: *defaults
