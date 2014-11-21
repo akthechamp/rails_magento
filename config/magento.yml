@@ -2,6 +2,7 @@ defaults: &defaults
   user: ironman
   pass: admin@123
   wsdlurl: http://localhost/rails_magento/dummy_magento/index.php/api/v2_soap?wsdl=1
+  endpoint: http://localhost/rails_magento/dummy_magento/index.php/api/v2_soap/index/
 
 development:
   <<: *defaults
@@ -13,3 +14,4 @@ production:
   user: ironman
   pass: admin@123
   wsdlurl: http://mywebdesignz.com/magento_store/index.php/api/v2_soap?wsdl=1
+  endpoint: http://mywebdesignz.com/magento_store/index.php/api/v2_soap/index

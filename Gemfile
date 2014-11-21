@@ -31,7 +31,10 @@ gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) support
 gem 'twitter-bootstrap-rails', :github => 'seyhunak/twitter-bootstrap-rails', :branch => 'bootstrap3'
 
 # SOAP API
-gem 'savon', '~> 2.2.0'
+# gem 'savon', '~> 2.2.0'
+# gem 'savon', '~> 2.8.0'
+gem 'savon', '~> 2.3.1'
+gem 'httpclient'
 
 gem 'carrierwave'
 

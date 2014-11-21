@@ -1,12 +1,9 @@
 class HomeController < ApplicationController
 
-	# include MagentoApi
 	require 'magento_api'
 
 	def index
 		@products = MagentoApi.allproducts
-		# @customers = MagentoApi.getcustomers
-		# @orders = MagentoApi.getorders
 	end
 
 	def view
@@ -37,11 +34,14 @@ class HomeController < ApplicationController
 			uploader.store!(params[:file])
 			encoded_file = Base64.encode64(File.open(uploader.current_path).read)
 
-			# types_data = { :complexObjectArray => 'thumbnail', :complexObjectArray => 'small_image', :complexObjectArray => 'image' }
+			# raise uploader
+			filenames = uploader.filename.split('.')
+			# types_data = [{:complexObjectArray => 'thumbnail'}, {:complexObjectArray => 'small_image'}, {:complexObjectArray => 'image'}]
 			# types_data = { :element => 'thumbnail', :element => 'small_image', :element => 'image' }
-			types_data = ["image,""small_image","thumbnail"]
-			# types_data = 'image'
-			file_data = [ file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => 0, :types => types_data, :exclude => 0 ]
+			types_data = ['image', 'small_image', 'thumbnail']
+			# types_data = 'thumbnail'
+			# file_data = [ file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :label => filenames[0], :position => 0, :types => types_data, :exclude => 0 ]
+			file_data = { file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :label => filenames[0], :position => 0, :types => types_data, :exclude => 0 }
 		end
 
 		@product_data = {
@@ -87,9 +87,7 @@ class HomeController < ApplicationController
 			:categories => categories,
 			:visibility => 4
 		}
-		# raise @product_data.inspect
 
-		# file_data = [file: {:content => encoded_file, :mime => uploader.content_type, :name => uploader.filename }, :position => '1', :types => types_data, :exclude => '0']
 		if params[:product_id].present?
 			@product = MagentoApi.update_product(@product_data, params[:product_id], file_data)
 		else
