@@ -1,6 +1,6 @@
 module MagentoApi
 
-	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'], logger: Rails.logger, log: true, convert_request_keys_to: :none, :log_level => :debug, pretty_print_xml: true)
+	@client = Savon.client(wsdl: MAGE_CONFIG['wsdlurl'], raise_errors: true, logger: Rails.logger, log: true, convert_request_keys_to: :none, :log_level => :debug, pretty_print_xml: true)
 
 	def self.get_session(refresh = false)
 		@session_id = nil if refresh
